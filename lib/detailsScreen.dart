@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'main.dart';
 
@@ -11,6 +12,7 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +20,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         title: Text('Event Detail'),
         actions: [
           IconButton(onPressed: (){
+            addEvent(widget.event?.name.toString() as String, widget.event?.info.toString() as String, widget.event?.calDate.toString() as String, "Canada");
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Event added to Google Calendar'),
             ));
@@ -52,5 +55,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> addEvent(String title, String info, String date, String location) async {
+    String url = "https://calendar.google.com/calendar/render?action=TEMPLATE&dates="
+        + date + "/" + date
+        + "&details="
+        + info
+        + "&location="
+        + location
+        + "&text="
+         + title;
+    await launchUrlString(url);
+    await launchUrlString(url);
   }
 }

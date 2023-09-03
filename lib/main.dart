@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart';
+import 'package:googleapis/calendar/v3.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:googleapis/calendar/v3.dart';
@@ -12,6 +14,8 @@ import 'package:tiktoklikescroller/tiktoklikescroller.dart';
 import 'package:untitled/detailsScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
+
+import 'package:url_launcher/url_launcher_string.dart';
 
 
 void main() async {
@@ -76,7 +80,9 @@ class _EventsPageState extends State<EventsPage> {
         // ^ registering our own function to listen to page changes
         builder: (BuildContext context, int index) {
           return GestureDetector(
-              onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DetailsScreen(event:events?[index] ,))),
+              onTap: () => {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DetailsScreen(event:events?[index] ,)))
+              },
               child: EventCard(event: events?[index]));
         },
       )
@@ -102,6 +108,7 @@ class Event {
   final String? type;
   final String? date;
   final String? info;
+  final String? calDate;
 
   Event({
     this.name,
@@ -109,6 +116,7 @@ class Event {
     this.type,
     this.date,
     this.info,
+    this.calDate,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -118,6 +126,7 @@ class Event {
       imageUrl: json['images'][4]['url'],
       type: json['type'],
       date: json['dates']['start']['localDate'],
+      calDate: json['dates']['start']['dateTime'],
     );
   }
 }
@@ -156,6 +165,8 @@ class _EventCardState extends State<EventCard> {
   //   });
   // }
 
+
+
   Future<void> _addToGoogleCalendar() async {
     final event = calendar.Event()
       ..summary = widget.event?.name
@@ -170,6 +181,7 @@ class _EventCardState extends State<EventCard> {
     } catch (e) {
       print('Error adding event to Google Calendar: $e');
     }
+
   }
   insertEvent(event){
     try {
@@ -211,8 +223,8 @@ class _EventCardState extends State<EventCard> {
         children: [
           Image.network(
             widget.event?.imageUrl ?? "",
-            width: 300,
-            height: 500,
+            width: 400,
+            height: 600,
               fit: BoxFit.fitHeight
           ),
           Positioned(
