@@ -68,15 +68,22 @@ class _EventsPageState extends State<EventsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Events'),
+        actions: [
+          IconButton(onPressed: (){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Under development'),
+            ));
+          }, icon: Icon(Icons.account_circle))
+        ],
       ),
       body:
       TikTokStyleFullPageScroller(
         contentSize: events?.length??0,
-        swipePositionThreshold: 0.2,
+        swipePositionThreshold: 0.1,
         // ^ the fraction of the screen needed to scroll
-        swipeVelocityThreshold: 2000,
+        swipeVelocityThreshold: 1000,
         // ^ the velocity threshold for smaller scrolls
-        animationDuration: const Duration(milliseconds: 400),
+        animationDuration: const Duration(milliseconds: 100),
         // ^ registering our own function to listen to page changes
         builder: (BuildContext context, int index) {
           return GestureDetector(
