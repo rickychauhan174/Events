@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Events App',
+      title: 'Aventi',
       debugShowCheckedModeBanner: false,
       home: EventsPage(),
     );
@@ -67,7 +67,21 @@ class _EventsPageState extends State<EventsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Events'),
+        backgroundColor: Color(0xff80cbc4),
+        centerTitle: false,
+        title: Text("AVENTI",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Color(0xff000000),
+            shadows: [
+              Shadow(
+                color: Color(0xffffffff),
+                offset: Offset(3.0, 3.0),
+                blurRadius: 3.0,
+              ),
+            ],
+          ),),
         actions: [
           IconButton(onPressed: (){
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -79,11 +93,11 @@ class _EventsPageState extends State<EventsPage> {
       body:
       TikTokStyleFullPageScroller(
         contentSize: events?.length??0,
-        swipePositionThreshold: 0.1,
+        swipePositionThreshold: 0.2,
         // ^ the fraction of the screen needed to scroll
-        swipeVelocityThreshold: 1000,
+        swipeVelocityThreshold: 2000,
         // ^ the velocity threshold for smaller scrolls
-        animationDuration: const Duration(milliseconds: 100),
+        animationDuration: const Duration(milliseconds: 200),
         // ^ registering our own function to listen to page changes
         builder: (BuildContext context, int index) {
           return GestureDetector(
