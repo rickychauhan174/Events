@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:flutter/material.dart';
@@ -17,20 +18,29 @@ import 'dart:ui';
 
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'SignInScreen.dart';
+
 
 void main() async {
   firebaseInit();
   setUrlStrategy(PathUrlStrategy());
-  runApp(MyApp());
+  Future.delayed(Duration.zero);
+  // Check if the user is already authenticated
+  User? user = FirebaseAuth.instance.currentUser;
+  runApp(MyApp(user: user));
 }
 
 class MyApp extends StatelessWidget {
+  final User? user;
+  MyApp({required this.user});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Aventi',
       debugShowCheckedModeBanner: false,
-      home: EventsPage(),
+      // home: EventsPage(),
+      home: user == null ? SignInScreen() : EventsPage(),
     );
   }
 }
@@ -87,7 +97,11 @@ class _EventsPageState extends State<EventsPage> {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('Under development'),
             ));
-          }, icon: Icon(Icons.account_circle))
+          }, icon: Icon(Icons.account_circle)),
+
+          IconButton(onPressed: (){
+            _signOut();
+          }, icon: Icon(Icons.logout))
         ],
       ),
       body:
@@ -120,6 +134,12 @@ class _EventsPageState extends State<EventsPage> {
         }).toList(),
       ),*/
     );
+  }
+
+  void _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    // Redirect to the sign-in screen or any other screen as needed
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInScreen()));
   }
 }
 
