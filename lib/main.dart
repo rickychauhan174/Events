@@ -23,8 +23,8 @@ import 'SignInScreen.dart';
 
 void main() async {
   firebaseInit();
-  setUrlStrategy(PathUrlStrategy());
-  Future.delayed(Duration.zero);
+  // setUrlStrategy(PathUrlStrategy());
+  await Future.delayed(Duration(seconds: 1));
   // Check if the user is already authenticated
   User? user = FirebaseAuth.instance.currentUser;
   runApp(MyApp(user: user));
