@@ -62,15 +62,67 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   void fetchEvents() async {
-    final response = await http.get(Uri.parse("https://app.ticketmaster.com/discovery/v2/events.json?size=30&apikey=A70K1slSFWNOV3izO6m551q4RrLNQdIj"));
-    if (response.statusCode == 200) {
-      final eventsJson = jsonDecode(response.body)['_embedded']['events'];
-      setState(() {
-        events = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
-      });
-    } else {
-      print('Failed to fetch events');
+    //concert, sports, arts, music
+    var baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json?size=25&apikey=A70K1slSFWNOV3izO6m551q4RrLNQdIj&countryCode=CA";
+    var ticketMasterConcertUrl = Uri.parse("$baseUrl&source=ticketmaster&classificationName=concert");
+    var ticketMasterSportsUrl = Uri.parse("$baseUrl&source=ticketmaster&classificationName=sports");
+    var ticketMasterArtsUrl = Uri.parse("$baseUrl&source=ticketmaster&classificationName=arts");
+    var ticketMasterMusicUrl = Uri.parse("$baseUrl&source=ticketmaster&classificationName=music");
+
+    var universeUrl = Uri.parse("$baseUrl&source=universe");
+
+    //TM Concert
+    final tmConcertResponse = await http.get(ticketMasterConcertUrl);
+    if (tmConcertResponse.statusCode == 200) {
+      final eventsJson = jsonDecode(tmConcertResponse.body)['_embedded']['events'];
+      var list = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      events?.addAll(list);
     }
+
+    //TM Sports
+    final tmSportsResponse = await http.get(ticketMasterSportsUrl);
+    if (tmSportsResponse.statusCode == 200) {
+      final eventsJson = jsonDecode(tmSportsResponse.body)['_embedded']['events'];
+      var list = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      events?.addAll(list);
+    }
+
+    //TM Arts
+    final tmArtsResponse = await http.get(ticketMasterArtsUrl);
+    if (tmArtsResponse.statusCode == 200) {
+      final eventsJson = jsonDecode(tmArtsResponse.body)['_embedded']['events'];
+      var list = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      events?.addAll(list);
+    }
+
+    //TM Music
+    final tmMusicResponse = await http.get(ticketMasterMusicUrl);
+    if (tmMusicResponse.statusCode == 200) {
+      final eventsJson = jsonDecode(tmMusicResponse.body)['_embedded']['events'];
+      var list = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      events?.addAll(list);
+    }
+
+    //Universe Concerts
+   /* final uniResponse = await http.get(universeUrl);
+    if (uniResponse.statusCode == 200) {
+      final eventsJson = jsonDecode(uniResponse.body)['_embedded']['events'];
+      var list = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      events?.addAll(list);
+    }*/
+
+    setState(() {
+      // events = eventsJson.map((eventJson) => Event.fromJson(eventJson)).toList();
+      var prevList = events;
+      prevList?.sort((a, b) {
+        int aDate = DateTime.parse(a.date ?? '').microsecondsSinceEpoch;
+        int bDate = DateTime.parse(b.date ?? '').microsecondsSinceEpoch;
+        return aDate.compareTo(bDate);
+      });
+      // newList?.sort((a,b)=> b["date"].compareTo(a["date"]));
+      events = prevList;
+    });
+
   }
 
   @override
