@@ -202,6 +202,7 @@ class Event {
   final String? date;
   final String? info;
   final String? calDate;
+  final String? url;
 
   Event({
     this.name,
@@ -210,6 +211,7 @@ class Event {
     this.date,
     this.info,
     this.calDate,
+    this.url,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -218,6 +220,7 @@ class Event {
       info: json['info'],
       imageUrl: json['images'][4]['url'],
       type: json['type'],
+      url: json['url'],
       date: json['dates']['start']['localDate'],
       calDate: json['dates']['start']['dateTime'],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'main.dart';
@@ -58,6 +59,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ),
                 ),
                 SizedBox(height: 10,),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xff80cbc4)),
+                    ),
+                  onPressed: (){_gotoBuyTicket(widget.event!.url!);},
+                  child: Text('Buy Tickets', style: TextStyle(color: Colors.white),),
+                ),
+                SizedBox(height: 10,),
                 Text("Name : ${widget.event?.name.toString()}",style: TextStyle(fontSize: 14),),
                 SizedBox(height: 10,),
                 Text("date : ${widget.event?.date.toString()}"),
@@ -65,6 +74,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Text("info : ${widget.event?.info.toString()}"),
                 SizedBox(height: 10,),
                 Text("type : ${widget.event?.type.toString()}"),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -84,5 +94,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
          + title;
     await launchUrlString(url);
     await launchUrlString(url);
+  }
+
+  _gotoBuyTicket(String url) async {
+    await launchUrl(Uri.parse(url));
   }
 }
